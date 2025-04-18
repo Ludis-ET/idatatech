@@ -357,7 +357,7 @@ export function LandingPage({courses}) {
                   </span>
                 </motion.h1>
                 <motion.p
-                  className="max-w-[600px] text-xl text-muted-foreground"
+                  className="max-w-[800px] text-xl text-muted-foreground"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: {
@@ -956,7 +956,7 @@ export function LandingPage({courses}) {
                     <Card className="group overflow-hidden transition-all hover:shadow-lg">
                       <div className="relative aspect-video overflow-hidden">
                         <Image
-                          src={course.image || "/placeholder.svg"}
+                          src={course.image_url || "/placeholder.svg"}
                           alt={course.title}
                           width={600}
                           height={400}

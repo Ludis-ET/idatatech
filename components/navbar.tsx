@@ -138,17 +138,6 @@ export function Navbar() {
             </Button>
           )}
 
-          <Button
-            variant="ghost"
-            size="icon"
-            asChild
-            className="hidden sm:flex"
-          >
-            <Link href="/cart">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="sr-only">Shopping Cart</span>
-            </Link>
-          </Button>
 
           <ModeToggle />
 
