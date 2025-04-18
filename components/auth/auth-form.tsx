@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -12,14 +13,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase/client"
+import { useAuth } from "@/contexts/auth-context"
 
 type AuthMode = "signin" | "signup"
 
-const formSchema = z.object({
+const signinSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  fullName: z.string().optional(),
+})
+
+const signupSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  fullName: z.string().min(2, { message: "Full name must be at least 2 characters" }),
 })
 
 export function AuthForm({ mode = "signin" }: { mode?: AuthMode }) {
@@ -27,13 +33,18 @@ export function AuthForm({ mode = "signin" }: { mode?: AuthMode }) {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirectTo") || "/dashboard"
+  const { signIn, signUp } = useAuth()
+
+  const formSchema = authMode === "signin" ? signinSchema : signupSchema
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
-      fullName: "",
+      ...(authMode === "signup" && { fullName: "" }),
     },
   })
 
@@ -42,37 +53,34 @@ export function AuthForm({ mode = "signin" }: { mode?: AuthMode }) {
 
     try {
       if (authMode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: values.email,
-          password: values.password,
-        })
+        const { error, success } = await signIn(values.email, values.password)
 
         if (error) throw error
 
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        })
-
-        router.push("/dashboard")
-        router.refresh()
+        if (success) {
+          toast({
+            title: "Welcome back!",
+            description: "You have successfully signed in.",
+          })
+          router.push(redirectTo)
+        }
       } else {
-        const { error } = await supabase.auth.signUp({
-          email: values.email,
-          password: values.password,
-          options: {
-            data: {
-              full_name: values.fullName,
-            },
-          },
-        })
+        const { error, success } = await signUp(
+          values.email,
+          values.password,
+          (values as z.infer<typeof signupSchema>).fullName,
+        )
 
         if (error) throw error
 
-        toast({
-          title: "Account created!",
-          description: "Please check your email to confirm your account.",
-        })
+        if (success) {
+          toast({
+            title: "Account created!",
+            description: "Please check your email to confirm your account.",
+          })
+          // Optionally redirect to a confirmation page
+          router.push("/signup/confirmation")
+        }
       }
     } catch (error: any) {
       toast({
@@ -86,6 +94,7 @@ export function AuthForm({ mode = "signin" }: { mode?: AuthMode }) {
   }
 
   const toggleAuthMode = () => {
+    form.reset()
     setAuthMode(authMode === "signin" ? "signup" : "signin")
   }
 
@@ -135,7 +144,14 @@ export function AuthForm({ mode = "signin" }: { mode?: AuthMode }) {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    {authMode === "signin" && (
+                      <Button variant="link" className="p-0 h-auto text-xs" asChild>
+                        <Link href="/forgot-password">Forgot password?</Link>
+                      </Button>
+                    )}
+                  </div>
                   <FormControl>
                     <div className="relative">
                       <Input type={showPassword ? "text" : "password"} placeholder="••••••••" {...field} />

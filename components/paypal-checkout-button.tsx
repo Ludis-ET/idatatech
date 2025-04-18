@@ -43,6 +43,7 @@ export function PayPalCheckoutButton({ amount, courseId, courseTitle }: PayPalCh
         orderId: data.orderID,
         courseId,
         amount,
+        courseTitle, // Add this parameter
       })
 
       if (result.success) {

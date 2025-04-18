@@ -8,6 +8,7 @@ interface PaymentData {
   courseId: number
   amount: number
   userId?: string
+  courseTitle?: string
 }
 
 export async function processPayment(data: PaymentData) {
@@ -46,6 +47,8 @@ export async function processPayment(data: PaymentData) {
       payment_method: "paypal",
       payment_id: data.orderId,
       status: "completed",
+      // Add optional details if available
+      details: data.courseTitle ? `Purchase of: ${data.courseTitle}` : undefined,
     })
 
     if (paymentError) throw paymentError

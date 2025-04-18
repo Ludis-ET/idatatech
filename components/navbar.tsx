@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { LogOut, Menu, Search, ShoppingCart, X } from "lucide-react"
+import { Menu, Search, ShoppingCart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -18,17 +18,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ModeToggle } from "@/components/mode-toggle"
-import { supabase } from "@/lib/supabase/client"
-import { useToast } from "@/components/ui/use-toast"
+import { useAuth } from "@/contexts/auth-context"
+import { toast } from "@/components/ui/use-toast"
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const pathname = usePathname()
-  const router = useRouter()
-  const { toast } = useToast()
+  const { user, profile, isLoading, signOut } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,50 +40,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  useEffect(() => {
-    async function getUser() {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser()
-
-        if (user) {
-          const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-          setUser(profile)
-        }
-      } catch (error) {
-        console.error("Error getting user:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getUser()
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_IN" && session?.user) {
-        const { data: profile } = await supabase.from("profiles").select("*").eq("id", session.user.id).single()
-
-        setUser(profile)
-      } else if (event === "SIGNED_OUT") {
-        setUser(null)
-      }
-    })
-
-    return () => {
-      authListener.subscription.unsubscribe()
-    }
-  }, [])
-
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut()
+      await signOut()
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
       })
-      router.push("/")
     } catch (error: any) {
       toast({
         title: "Error",
@@ -103,17 +63,17 @@ export function Navbar() {
     { href: "/contact", label: "Contact" },
   ]
 
-  const userInitials = user?.full_name
-    ? user.full_name
+  const userInitials = profile?.full_name
+    ? profile.full_name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
-    : "U"
+    : user?.email?.charAt(0).toUpperCase() || "U"
 
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md" : "bg-transparent"
+        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
       }`}
     >
       <div className="container flex h-16 items-center justify-between px-4">
@@ -148,7 +108,7 @@ export function Navbar() {
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: "100%", opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              className="relative flex items-center"
+              className="relative hidden sm:flex items-center"
             >
               <Input type="search" placeholder="Search courses..." className="w-full max-w-[200px]" autoFocus />
               <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)} className="absolute right-0">
@@ -156,12 +116,12 @@ export function Navbar() {
               </Button>
             </motion.div>
           ) : (
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)}>
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)} className="hidden sm:flex">
               <Search className="h-4 w-4" />
             </Button>
           )}
 
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
             <Link href="/cart">
               <ShoppingCart className="h-4 w-4" />
               <span className="sr-only">Shopping Cart</span>
@@ -170,14 +130,17 @@ export function Navbar() {
 
           <ModeToggle />
 
-          {!loading && (
-            <div className="hidden gap-4 sm:flex">
+          {!isLoading && (
+            <div className="hidden sm:flex">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar_url || "/placeholder.svg"} alt={user.full_name || "User"} />
+                        <AvatarImage
+                          src={profile?.avatar_url || "/placeholder.svg"}
+                          alt={profile?.full_name || "User"}
+                        />
                         <AvatarFallback>{userInitials}</AvatarFallback>
                       </Avatar>
                     </Button>
@@ -195,15 +158,12 @@ export function Navbar() {
                       <Link href="/settings">Settings</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
                 <>
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" asChild className="mr-2">
                     <Link href="/login">Log In</Link>
                   </Button>
                   <Button asChild>
@@ -221,7 +181,7 @@ export function Navbar() {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="flex flex-col gap-6 py-6">
                 <Link href="/" className="flex items-center gap-2">
                   <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary">
@@ -231,6 +191,11 @@ export function Navbar() {
                   </div>
                   <span className="text-xl font-bold">NexLearn</span>
                 </Link>
+
+                <div className="relative flex items-center">
+                  <Input type="search" placeholder="Search courses..." className="w-full pr-8" />
+                  <Search className="absolute right-3 h-4 w-4 text-muted-foreground" />
+                </div>
 
                 <nav className="flex flex-col gap-4">
                   {navLinks.map((link) => (
@@ -246,24 +211,36 @@ export function Navbar() {
                   ))}
                 </nav>
 
-                {!loading && (
+                <div className="flex items-center gap-4">
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="/cart">
+                      <ShoppingCart className="h-4 w-4" />
+                      <span className="sr-only">Shopping Cart</span>
+                    </Link>
+                  </Button>
+                </div>
+
+                {!isLoading && (
                   <div className="flex flex-col gap-2">
                     {user ? (
                       <>
                         <div className="flex items-center gap-2 py-2">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage src={user.avatar_url || "/placeholder.svg"} alt={user.full_name || "User"} />
+                            <AvatarImage
+                              src={profile?.avatar_url || "/placeholder.svg"}
+                              alt={profile?.full_name || "User"}
+                            />
                             <AvatarFallback>{userInitials}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm font-medium">{user.full_name || "User"}</p>
+                            <p className="text-sm font-medium">{profile?.full_name || user.email}</p>
                             <p className="text-xs text-muted-foreground">{user.email}</p>
                           </div>
                         </div>
                         <Button asChild variant="outline" className="w-full">
                           <Link href="/dashboard">Dashboard</Link>
                         </Button>
-                        <Button onClick={handleSignOut} variant="outline" className="w-full">
+                        <Button variant="outline" className="w-full" onClick={handleSignOut}>
                           Sign Out
                         </Button>
                       </>

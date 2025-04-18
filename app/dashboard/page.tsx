@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getSession()
 
   if (!session) {
-    redirect("/login")
+    redirect("/login?redirectTo=/dashboard")
   }
 
   // Get user profile
