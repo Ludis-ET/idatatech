@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 // Sample blog data
 const blogPosts = [
@@ -18,7 +18,8 @@ const blogPosts = [
     id: 1,
     slug: "future-of-ai-education",
     title: "The Future of AI in Education",
-    excerpt: "Exploring how artificial intelligence is transforming the learning experience for students worldwide.",
+    excerpt:
+      "Exploring how artificial intelligence is transforming the learning experience for students worldwide.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Apr 10, 2025",
@@ -33,7 +34,8 @@ const blogPosts = [
     id: 2,
     slug: "mastering-data-science",
     title: "5 Steps to Mastering Data Science",
-    excerpt: "A comprehensive guide to building your skills in one of the most in-demand fields in tech.",
+    excerpt:
+      "A comprehensive guide to building your skills in one of the most in-demand fields in tech.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Apr 5, 2025",
@@ -48,7 +50,8 @@ const blogPosts = [
     id: 3,
     slug: "remote-learning-tips",
     title: "Effective Remote Learning Strategies",
-    excerpt: "Tips and techniques to maximize productivity and engagement when learning from home.",
+    excerpt:
+      "Tips and techniques to maximize productivity and engagement when learning from home.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Mar 28, 2025",
@@ -63,7 +66,8 @@ const blogPosts = [
     id: 4,
     slug: "blockchain-education",
     title: "How Blockchain is Revolutionizing Education Credentials",
-    excerpt: "Exploring the impact of blockchain technology on academic credentials and certification.",
+    excerpt:
+      "Exploring the impact of blockchain technology on academic credentials and certification.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Mar 20, 2025",
@@ -78,7 +82,8 @@ const blogPosts = [
     id: 5,
     slug: "future-skills-2025",
     title: "Top 10 Skills You Need to Master by 2025",
-    excerpt: "A look at the most in-demand skills that will shape the future job market.",
+    excerpt:
+      "A look at the most in-demand skills that will shape the future job market.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Mar 15, 2025",
@@ -93,7 +98,8 @@ const blogPosts = [
     id: 6,
     slug: "gamification-learning",
     title: "Gamification: Making Learning Fun and Effective",
-    excerpt: "How game mechanics are being used to increase engagement and retention in education.",
+    excerpt:
+      "How game mechanics are being used to increase engagement and retention in education.",
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eu aliquam nisl nisl sit amet nisl.",
     date: "Mar 10, 2025",
@@ -104,29 +110,30 @@ const blogPosts = [
     readTime: "5 min read",
     featured: false,
   },
-]
+];
 
 // Get unique categories
-const categories = Array.from(new Set(blogPosts.map((post) => post.category)))
+const categories = Array.from(new Set(blogPosts.map((post) => post.category)));
 
 export function BlogList() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeCategory, setActiveCategory] = useState("all")
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
 
   // Filter posts based on search and category
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.author.toLowerCase().includes(searchQuery.toLowerCase())
+      post.author.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory = activeCategory === "all" || post.category === activeCategory
+    const matchesCategory =
+      activeCategory === "all" || post.category === activeCategory;
 
-    return matchesSearch && matchesCategory
-  })
+    return matchesSearch && matchesCategory;
+  });
 
   // Get featured posts
-  const featuredPosts = blogPosts.filter((post) => post.featured)
+  const featuredPosts = blogPosts.filter((post) => post.featured);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -136,7 +143,7 @@ export function BlogList() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -147,7 +154,7 @@ export function BlogList() {
         duration: 0.5,
       },
     },
-  }
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -157,9 +164,12 @@ export function BlogList() {
         <section className="bg-muted/30 py-12 md:py-16">
           <div className="container px-4">
             <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">NexLearn Blog</h1>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                IdataTech Blog
+              </h1>
               <p className="mt-4 text-xl text-muted-foreground">
-                Insights, tips, and resources to help you succeed in your learning journey.
+                Insights, tips, and resources to help you succeed in your
+                learning journey.
               </p>
               <div className="mt-6 flex justify-center">
                 <div className="relative w-full max-w-md">
@@ -206,7 +216,9 @@ export function BlogList() {
                               <span>{post.readTime}</span>
                             </div>
                             <h3 className="text-xl font-bold">{post.title}</h3>
-                            <p className="text-muted-foreground">{post.excerpt}</p>
+                            <p className="text-muted-foreground">
+                              {post.excerpt}
+                            </p>
                           </div>
                           <div className="mt-4 flex items-center gap-2">
                             <div className="relative h-8 w-8 overflow-hidden rounded-full">
@@ -217,7 +229,9 @@ export function BlogList() {
                                 className="object-cover"
                               />
                             </div>
-                            <span className="text-sm font-medium">{post.author}</span>
+                            <span className="text-sm font-medium">
+                              {post.author}
+                            </span>
                           </div>
                         </CardContent>
                       </div>
@@ -234,7 +248,11 @@ export function BlogList() {
           <div className="container px-4">
             <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <h2 className="text-2xl font-bold">All Articles</h2>
-              <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full sm:w-auto">
+              <Tabs
+                value={activeCategory}
+                onValueChange={setActiveCategory}
+                className="w-full sm:w-auto"
+              >
                 <TabsList className="w-full justify-start overflow-auto sm:w-auto">
                   <TabsTrigger value="all">All</TabsTrigger>
                   {categories.map((category) => (
@@ -274,8 +292,12 @@ export function BlogList() {
                             <span>•</span>
                             <span>{post.readTime}</span>
                           </div>
-                          <h3 className="mt-2 text-xl font-bold">{post.title}</h3>
-                          <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+                          <h3 className="mt-2 text-xl font-bold">
+                            {post.title}
+                          </h3>
+                          <p className="mt-2 text-muted-foreground">
+                            {post.excerpt}
+                          </p>
                           <div className="mt-4 flex items-center gap-2">
                             <div className="relative h-8 w-8 overflow-hidden rounded-full">
                               <Image
@@ -285,7 +307,9 @@ export function BlogList() {
                                 className="object-cover"
                               />
                             </div>
-                            <span className="text-sm font-medium">{post.author}</span>
+                            <span className="text-sm font-medium">
+                              {post.author}
+                            </span>
                           </div>
                         </CardContent>
                       </Card>
@@ -300,13 +324,14 @@ export function BlogList() {
                 </div>
                 <h3 className="mt-4 text-xl font-bold">No articles found</h3>
                 <p className="mt-2 text-center text-muted-foreground">
-                  Try adjusting your search or filter criteria to find what you're looking for.
+                  Try adjusting your search or filter criteria to find what
+                  you're looking for.
                 </p>
                 <Button
                   className="mt-4"
                   onClick={() => {
-                    setSearchQuery("")
-                    setActiveCategory("all")
+                    setSearchQuery("");
+                    setActiveCategory("all");
                   }}
                 >
                   Reset Filters
@@ -321,15 +346,24 @@ export function BlogList() {
           <div className="container px-4">
             <div className="mx-auto max-w-2xl rounded-xl border bg-card p-8 shadow-sm">
               <div className="text-center">
-                <h2 className="text-2xl font-bold">Subscribe to Our Newsletter</h2>
+                <h2 className="text-2xl font-bold">
+                  Subscribe to Our Newsletter
+                </h2>
                 <p className="mt-2 text-muted-foreground">
-                  Get the latest articles, tutorials, and updates delivered straight to your inbox.
+                  Get the latest articles, tutorials, and updates delivered
+                  straight to your inbox.
                 </p>
                 <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-                  <Input type="email" placeholder="Enter your email" className="flex-1" />
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    className="flex-1"
+                  />
                   <Button>Subscribe</Button>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">We respect your privacy. Unsubscribe at any time.</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  We respect your privacy. Unsubscribe at any time.
+                </p>
               </div>
             </div>
           </div>
@@ -337,5 +371,5 @@ export function BlogList() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

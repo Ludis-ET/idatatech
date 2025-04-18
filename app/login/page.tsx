@@ -1,12 +1,12 @@
-import type { Metadata } from "next"
-import { AuthForm } from "@/components/auth/auth-form"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import type { Metadata } from "next";
+import { AuthForm } from "@/components/auth/auth-form";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Login | NexLearn",
-  description: "Login to your NexLearn account",
-}
+  title: "Login | IdataTech",
+  description: "Login to your IdataTech account",
+};
 
 export default function LoginPage() {
   return (
@@ -20,5 +20,5 @@ export default function LoginPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { motion } from "framer-motion"
-import { Menu, Search, ShoppingCart, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,65 +15,67 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ModeToggle } from "@/components/mode-toggle"
-import { useAuth } from "@/contexts/auth-context"
-import { toast } from "@/components/ui/use-toast"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ModeToggle } from "@/components/mode-toggle";
+import { useAuth } from "@/contexts/auth-context";
+import { toast } from "@/components/ui/use-toast";
 
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const pathname = usePathname()
-  const { user, profile, isLoading, signOut } = useAuth()
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const { user, profile, isLoading, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
-        setIsScrolled(true)
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     try {
-      await signOut()
+      await signOut();
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
-      })
+      });
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "An error occurred while signing out.",
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/courses", label: "Courses" },
     { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact" },
-  ]
+  ];
 
   const userInitials = profile?.full_name
     ? profile.full_name
         .split(" ")
         .map((n: string) => n[0])
         .join("")
-    : user?.email?.charAt(0).toUpperCase() || "U"
+    : user?.email?.charAt(0).toUpperCase() || "U";
 
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled
+          ? "bg-background/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       }`}
     >
       <div className="container flex h-16 items-center justify-between px-4">
@@ -84,7 +86,7 @@ export function Navbar() {
                 N
               </div>
             </div>
-            <span className="text-xl font-bold">NexLearn</span>
+            <span className="text-xl font-bold">IdataTech</span>
           </Link>
 
           <nav className="hidden md:flex md:gap-6">
@@ -110,18 +112,38 @@ export function Navbar() {
               exit={{ width: 0, opacity: 0 }}
               className="relative hidden sm:flex items-center"
             >
-              <Input type="search" placeholder="Search courses..." className="w-full max-w-[200px]" autoFocus />
-              <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)} className="absolute right-0">
+              <Input
+                type="search"
+                placeholder="Search courses..."
+                className="w-full max-w-[200px]"
+                autoFocus
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSearchOpen(false)}
+                className="absolute right-0"
+              >
                 <X className="h-4 w-4" />
               </Button>
             </motion.div>
           ) : (
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)} className="hidden sm:flex">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(true)}
+              className="hidden sm:flex"
+            >
               <Search className="h-4 w-4" />
             </Button>
           )}
 
-          <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="hidden sm:flex"
+          >
             <Link href="/cart">
               <ShoppingCart className="h-4 w-4" />
               <span className="sr-only">Shopping Cart</span>
@@ -135,7 +157,10 @@ export function Navbar() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
                       <Avatar className="h-8 w-8">
                         <AvatarImage
                           src={profile?.avatar_url || "/placeholder.svg"}
@@ -158,7 +183,9 @@ export function Navbar() {
                       <Link href="/settings">Settings</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut}>Log out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      Log out
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
@@ -189,11 +216,15 @@ export function Navbar() {
                       N
                     </div>
                   </div>
-                  <span className="text-xl font-bold">NexLearn</span>
+                  <span className="text-xl font-bold">IdataTech</span>
                 </Link>
 
                 <div className="relative flex items-center">
-                  <Input type="search" placeholder="Search courses..." className="w-full pr-8" />
+                  <Input
+                    type="search"
+                    placeholder="Search courses..."
+                    className="w-full pr-8"
+                  />
                   <Search className="absolute right-3 h-4 w-4 text-muted-foreground" />
                 </div>
 
@@ -203,7 +234,9 @@ export function Navbar() {
                       key={link.href}
                       href={link.href}
                       className={`text-sm font-medium transition-colors hover:text-primary ${
-                        pathname === link.href ? "text-primary" : "text-foreground/80"
+                        pathname === link.href
+                          ? "text-primary"
+                          : "text-foreground/80"
                       }`}
                     >
                       {link.label}
@@ -233,14 +266,22 @@ export function Navbar() {
                             <AvatarFallback>{userInitials}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm font-medium">{profile?.full_name || user.email}</p>
-                            <p className="text-xs text-muted-foreground">{user.email}</p>
+                            <p className="text-sm font-medium">
+                              {profile?.full_name || user.email}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
                           </div>
                         </div>
                         <Button asChild variant="outline" className="w-full">
                           <Link href="/dashboard">Dashboard</Link>
                         </Button>
-                        <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={handleSignOut}
+                        >
                           Sign Out
                         </Button>
                       </>
@@ -262,5 +303,5 @@ export function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

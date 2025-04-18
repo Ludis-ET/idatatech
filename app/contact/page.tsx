@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { submitContactForm, type ContactFormData } from "@/actions/contact"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { motion } from "framer-motion";
+import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { submitContactForm, type ContactFormData } from "@/actions/contact";
 
 // Form validation schema
 const formSchema = z.object({
@@ -21,11 +21,11 @@ const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
   message: z.string().min(10, "Message must be at least 10 characters"),
-})
+});
 
 export default function ContactPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const {
     register,
@@ -34,36 +34,36 @@ export default function ContactPage() {
     formState: { errors },
   } = useForm<ContactFormData>({
     resolver: zodResolver(formSchema),
-  })
+  });
 
   const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const result = await submitContactForm(data)
+      const result = await submitContactForm(data);
 
       if (result.success) {
         toast({
           title: "Message Sent",
           description: result.message,
-        })
-        reset()
+        });
+        reset();
       } else {
         toast({
           title: "Error",
           description: result.message,
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,7 +73,7 @@ export default function ContactPage() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -84,7 +84,7 @@ export default function ContactPage() {
         duration: 0.5,
       },
     },
-  }
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -94,9 +94,12 @@ export default function ContactPage() {
         <section className="bg-muted/30 py-12 md:py-16">
           <div className="container px-4">
             <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Contact Us</h1>
+              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                Contact Us
+              </h1>
               <p className="mt-4 text-xl text-muted-foreground">
-                Have questions or feedback? We'd love to hear from you. Get in touch with our team.
+                Have questions or feedback? We'd love to hear from you. Get in
+                touch with our team.
               </p>
             </div>
           </div>
@@ -137,9 +140,9 @@ export default function ContactPage() {
                     </div>
                     <h3 className="mb-2 text-xl font-bold">Email Us</h3>
                     <p className="text-muted-foreground">
-                      info@nexlearn.com
+                      info@IdataTech.com
                       <br />
-                      support@nexlearn.com
+                      support@IdataTech.com
                     </p>
                   </CardContent>
                 </Card>
@@ -178,7 +181,7 @@ export default function ContactPage() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="NexLearn Location"
+                  title="IdataTech Location"
                 ></iframe>
               </div>
 
@@ -186,15 +189,24 @@ export default function ContactPage() {
               <div>
                 <Card>
                   <CardContent className="p-6">
-                    <h2 className="mb-6 text-2xl font-bold">Send Us a Message</h2>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <h2 className="mb-6 text-2xl font-bold">
+                      Send Us a Message
+                    </h2>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="space-y-4"
+                    >
                       <div>
                         <Input
                           placeholder="Your Name"
                           {...register("name")}
                           className={errors.name ? "border-red-500" : ""}
                         />
-                        {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
+                        {errors.name && (
+                          <p className="mt-1 text-xs text-red-500">
+                            {errors.name.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <Input
@@ -203,7 +215,11 @@ export default function ContactPage() {
                           {...register("email")}
                           className={errors.email ? "border-red-500" : ""}
                         />
-                        {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                        {errors.email && (
+                          <p className="mt-1 text-xs text-red-500">
+                            {errors.email.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <Input
@@ -211,7 +227,11 @@ export default function ContactPage() {
                           {...register("subject")}
                           className={errors.subject ? "border-red-500" : ""}
                         />
-                        {errors.subject && <p className="mt-1 text-xs text-red-500">{errors.subject.message}</p>}
+                        {errors.subject && (
+                          <p className="mt-1 text-xs text-red-500">
+                            {errors.subject.message}
+                          </p>
+                        )}
                       </div>
                       <div>
                         <Textarea
@@ -220,9 +240,17 @@ export default function ContactPage() {
                           {...register("message")}
                           className={errors.message ? "border-red-500" : ""}
                         />
-                        {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message.message}</p>}
+                        {errors.message && (
+                          <p className="mt-1 text-xs text-red-500">
+                            {errors.message.message}
+                          </p>
+                        )}
                       </div>
-                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={isSubmitting}
+                      >
                         {isSubmitting ? (
                           "Sending..."
                         ) : (
@@ -261,12 +289,14 @@ export default function ContactPage() {
                     "We accept major credit cards and PayPal. All payments are processed securely through our payment partners.",
                 },
                 {
-                  question: "Can I get a refund if I'm not satisfied with a course?",
+                  question:
+                    "Can I get a refund if I'm not satisfied with a course?",
                   answer:
                     "Yes, we offer a 30-day money-back guarantee for all our courses. If you're not satisfied with your purchase, you can request a refund within 30 days of enrollment.",
                 },
                 {
-                  question: "How long do I have access to a course after purchasing?",
+                  question:
+                    "How long do I have access to a course after purchasing?",
                   answer:
                     "Once you purchase a course, you have lifetime access to the course materials, including any future updates.",
                 },
@@ -289,5 +319,5 @@ export default function ContactPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

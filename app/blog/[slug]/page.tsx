@@ -1,38 +1,55 @@
-import type { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { getBlogPostBySlug, getRecentBlogPosts } from "@/lib/actions/data-actions"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatDate } from "@/lib/utils"
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import {
+  getBlogPostBySlug,
+  getRecentBlogPosts,
+} from "@/lib/actions/data-actions";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { formatDate } from "@/lib/utils";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { post } = await getBlogPostBySlug(params.slug)
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const { post } = await getBlogPostBySlug(params.slug);
 
   if (!post) {
     return {
-      title: "Blog Post Not Found | NexLearn",
+      title: "Blog Post Not Found | IdataTech",
       description: "The requested blog post could not be found",
-    }
+    };
   }
 
   return {
-    title: `${post.title} | NexLearn Blog`,
+    title: `${post.title} | IdataTech Blog`,
     description: post.excerpt,
-  }
+  };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const { post, error } = await getBlogPostBySlug(params.slug)
+export default async function BlogPostPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const { post, error } = await getBlogPostBySlug(params.slug);
 
   if (!post || error) {
-    notFound()
+    notFound();
   }
 
-  const { posts: recentPosts } = await getRecentBlogPosts(3)
+  const { posts: recentPosts } = await getRecentBlogPosts(3);
 
   return (
     <>
@@ -43,9 +60,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div className="mb-8 space-y-4">
               <div className="flex items-center gap-2">
                 <Badge variant="secondary">{post.category}</Badge>
-                <span className="text-sm text-muted-foreground">{formatDate(post.created_at)}</span>
+                <span className="text-sm text-muted-foreground">
+                  {formatDate(post.created_at)}
+                </span>
               </div>
-              <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{post.title}</h1>
+              <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+                {post.title}
+              </h1>
               <p className="text-xl text-muted-foreground">{post.excerpt}</p>
             </div>
 
@@ -71,7 +92,10 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div className="mt-8">
               <div className="flex flex-wrap gap-2">
                 {post.blog_post_tags?.map((postTag: any) => (
-                  <Link key={postTag.blog_tags.id} href={`/blog?tag=${postTag.blog_tags.slug}`}>
+                  <Link
+                    key={postTag.blog_tags.id}
+                    href={`/blog?tag=${postTag.blog_tags.slug}`}
+                  >
                     <Badge variant="outline" className="hover:bg-secondary">
                       {postTag.blog_tags.name}
                     </Badge>
@@ -94,7 +118,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                       <Image
                         src={
                           recentPost.image_url ||
-                          `/placeholder.svg?height=225&width=400&text=${encodeURIComponent(recentPost.title)}`
+                          `/placeholder.svg?height=225&width=400&text=${encodeURIComponent(
+                            recentPost.title
+                          )}`
                         }
                         alt={recentPost.title}
                         fill
@@ -105,16 +131,23 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     <CardHeader className="p-4">
                       <div className="flex items-center gap-2">
                         <Badge variant="secondary">{recentPost.category}</Badge>
-                        <span className="text-xs text-muted-foreground">{formatDate(recentPost.created_at)}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {formatDate(recentPost.created_at)}
+                        </span>
                       </div>
                       <CardTitle className="line-clamp-2 text-xl">
-                        <Link href={`/blog/${recentPost.slug}`} className="hover:text-primary">
+                        <Link
+                          href={`/blog/${recentPost.slug}`}
+                          className="hover:text-primary"
+                        >
                           {recentPost.title}
                         </Link>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
-                      <CardDescription className="line-clamp-2">{recentPost.excerpt}</CardDescription>
+                      <CardDescription className="line-clamp-2">
+                        {recentPost.excerpt}
+                      </CardDescription>
                     </CardContent>
                   </Card>
                 ))}
@@ -124,5 +157,5 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       </main>
       <Footer />
     </>
-  )
+  );
 }

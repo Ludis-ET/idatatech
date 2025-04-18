@@ -1,9 +1,16 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, useScroll, useTransform, useInView, AnimatePresence, useAnimation } from "framer-motion"
-import Link from "next/link"
-import Image from "next/image"
+import { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  AnimatePresence,
+  useAnimation,
+} from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   CheckCircle,
@@ -18,60 +25,63 @@ import {
   Clock,
   Play,
   ChevronDown,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { TestimonialCarousel } from "@/components/testimonial-carousel"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { TestimonialCarousel } from "@/components/testimonial-carousel";
+import { cn } from "@/lib/utils";
 
-export function LandingPage() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeTab, setActiveTab] = useState(0)
-  const [videoPlaying, setVideoPlaying] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
-  const statsInView = useInView(statsRef, { once: true, amount: 0.3 })
-  const featuresRef = useRef<HTMLDivElement>(null)
-  const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 })
-  const howItWorksRef = useRef<HTMLDivElement>(null)
-  const howItWorksInView = useInView(howItWorksRef, { once: true, amount: 0.3 })
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const ctaInView = useInView(ctaRef, { once: true, amount: 0.5 })
-  const partnersRef = useRef<HTMLDivElement>(null)
-  const partnersInView = useInView(partnersRef, { once: true, amount: 0.5 })
+export function LandingPage({courses}) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const statsInView = useInView(statsRef, { once: true, amount: 0.3 });
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 });
+  const howItWorksRef = useRef<HTMLDivElement>(null);
+  const howItWorksInView = useInView(howItWorksRef, {
+    once: true,
+    amount: 0.3,
+  });
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const ctaInView = useInView(ctaRef, { once: true, amount: 0.5 });
+  const partnersRef = useRef<HTMLDivElement>(null);
+  const partnersInView = useInView(partnersRef, { once: true, amount: 0.5 });
 
-  const { scrollYProgress } = useScroll()
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.5])
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95])
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.5]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
-  const statsControls = useAnimation()
-  const featuresControls = useAnimation()
+  const statsControls = useAnimation();
+  const featuresControls = useAnimation();
 
   useEffect(() => {
     if (statsInView) {
-      statsControls.start("visible")
+      statsControls.start("visible");
     }
     if (featuresInView) {
-      featuresControls.start("visible")
+      featuresControls.start("visible");
     }
-  }, [statsInView, featuresInView, statsControls, featuresControls])
+  }, [statsInView, featuresInView, statsControls, featuresControls]);
 
   useEffect(() => {
-    setIsVisible(true)
-  }, [])
+    setIsVisible(true);
+  }, []);
 
   const playVideo = () => {
     if (videoRef.current) {
       if (videoPlaying) {
-        videoRef.current.pause()
+        videoRef.current.pause();
       } else {
-        videoRef.current.play()
+        videoRef.current.play();
       }
-      setVideoPlaying(!videoPlaying)
+      setVideoPlaying(!videoPlaying);
     }
-  }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -81,7 +91,7 @@ export function LandingPage() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -92,7 +102,7 @@ export function LandingPage() {
         duration: 0.5,
       },
     },
-  }
+  };
 
   const cardVariants = {
     hidden: { y: 50, opacity: 0 },
@@ -105,7 +115,7 @@ export function LandingPage() {
         ease: "easeOut",
       },
     }),
-  }
+  };
 
   const statsVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -118,7 +128,7 @@ export function LandingPage() {
         ease: [0.175, 0.885, 0.32, 1.275], // Custom spring-like easing
       },
     }),
-  }
+  };
 
   const fadeInUpVariants = {
     hidden: { y: 30, opacity: 0 },
@@ -130,7 +140,7 @@ export function LandingPage() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   const staggerContainerVariants = {
     hidden: { opacity: 0 },
@@ -141,117 +151,98 @@ export function LandingPage() {
         delayChildren: 0.2,
       },
     },
-  }
+  };
 
   const features = [
     {
       icon: <Sparkles className="h-10 w-10 text-primary" />,
       title: "Cutting-Edge Courses",
-      description: "Access the latest technology and business courses taught by industry experts",
+      description:
+        "Access the latest technology and business courses taught by industry experts",
     },
     {
       icon: <Zap className="h-10 w-10 text-primary" />,
       title: "Interactive Learning",
-      description: "Engage with immersive content designed for maximum knowledge retention",
+      description:
+        "Engage with immersive content designed for maximum knowledge retention",
     },
     {
       icon: <Users className="h-10 w-10 text-primary" />,
       title: "Community Support",
-      description: "Join a global community of learners and instructors for collaborative growth",
+      description:
+        "Join a global community of learners and instructors for collaborative growth",
     },
     {
       icon: <BookOpen className="h-10 w-10 text-primary" />,
       title: "Comprehensive Library",
-      description: "Access thousands of courses across dozens of categories and disciplines",
+      description:
+        "Access thousands of courses across dozens of categories and disciplines",
     },
     {
       icon: <Award className="h-10 w-10 text-primary" />,
       title: "Recognized Certificates",
-      description: "Earn industry-recognized certificates to showcase your new skills",
+      description:
+        "Earn industry-recognized certificates to showcase your new skills",
     },
     {
       icon: <Clock className="h-10 w-10 text-primary" />,
       title: "Learn at Your Pace",
-      description: "Flexible learning schedules that adapt to your busy lifestyle",
+      description:
+        "Flexible learning schedules that adapt to your busy lifestyle",
     },
-  ]
+  ];
 
-  const popularCourses = [
-    {
-      id: 1,
-      slug: "advanced-ai-development",
-      title: "Advanced AI Development",
-      instructor: "Dr. Sarah Chen",
-      price: 129.99,
-      rating: 4.9,
-      students: 3240,
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Technology",
-    },
-    {
-      id: 2,
-      slug: "blockchain-fundamentals",
-      title: "Blockchain Fundamentals",
-      instructor: "Michael Rodriguez",
-      price: 89.99,
-      rating: 4.7,
-      students: 2180,
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Technology",
-    },
-    {
-      id: 3,
-      slug: "digital-marketing-mastery",
-      title: "Digital Marketing Mastery",
-      instructor: "Emma Thompson",
-      price: 99.99,
-      rating: 4.8,
-      students: 4560,
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Marketing",
-    },
-    {
-      id: 4,
-      slug: "ux-design-principles",
-      title: "UX Design Principles",
-      instructor: "Jason Wright",
-      price: 79.99,
-      rating: 4.6,
-      students: 3120,
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Design",
-    },
-  ]
-
+  
+  console.log(courses)
   const stats = [
-    { value: "10M+", label: "Students Worldwide", icon: <Globe className="h-6 w-6 text-primary" /> },
-    { value: "200+", label: "Expert Instructors", icon: <Users className="h-6 w-6 text-primary" /> },
-    { value: "15k+", label: "Courses Available", icon: <BookOpen className="h-6 w-6 text-primary" /> },
-    { value: "4.8", label: "Average Rating", icon: <Star className="h-6 w-6 text-primary" /> },
-  ]
+    {
+      value: "10M+",
+      label: "Students Worldwide",
+      icon: <Globe className="h-6 w-6 text-primary" />,
+    },
+    {
+      value: "200+",
+      label: "Expert Instructors",
+      icon: <Users className="h-6 w-6 text-primary" />,
+    },
+    {
+      value: "15k+",
+      label: "Courses Available",
+      icon: <BookOpen className="h-6 w-6 text-primary" />,
+    },
+    {
+      value: "4.8",
+      label: "Average Rating",
+      icon: <Star className="h-6 w-6 text-primary" />,
+    },
+  ];
 
   const howItWorks = [
     {
       title: "Browse Courses",
-      description: "Explore our extensive library of courses across various categories and skill levels.",
+      description:
+        "Explore our extensive library of courses across various categories and skill levels.",
       icon: <Search className="h-10 w-10 text-primary" />,
     },
     {
       title: "Enroll & Learn",
-      description: "Join courses that match your interests and learn at your own pace with flexible schedules.",
+      description:
+        "Join courses that match your interests and learn at your own pace with flexible schedules.",
       icon: <BookOpen className="h-10 w-10 text-primary" />,
     },
     {
       title: "Practice Skills",
-      description: "Apply your knowledge through hands-on projects, quizzes, and interactive exercises.",
+      description:
+        "Apply your knowledge through hands-on projects, quizzes, and interactive exercises.",
       icon: <Zap className="h-10 w-10 text-primary" />,
     },
     {
       title: "Earn Certificate",
-      description: "Complete your course to receive a certificate that validates your new skills.",
+      description:
+        "Complete your course to receive a certificate that validates your new skills.",
       icon: <Award className="h-10 w-10 text-primary" />,
     },
-  ]
+  ];
 
   const tabContent = [
     {
@@ -293,16 +284,28 @@ export function LandingPage() {
       ],
       image: "/placeholder.svg?height=400&width=600&text=Business+Training",
     },
-  ]
+  ];
 
   const partners = [
-    { name: "Microsoft", logo: "/placeholder.svg?height=60&width=180&text=Microsoft" },
-    { name: "Google", logo: "/placeholder.svg?height=60&width=180&text=Google" },
-    { name: "Amazon", logo: "/placeholder.svg?height=60&width=180&text=Amazon" },
+    {
+      name: "Microsoft",
+      logo: "/placeholder.svg?height=60&width=180&text=Microsoft",
+    },
+    {
+      name: "Google",
+      logo: "/placeholder.svg?height=60&width=180&text=Google",
+    },
+    {
+      name: "Amazon",
+      logo: "/placeholder.svg?height=60&width=180&text=Amazon",
+    },
     { name: "IBM", logo: "/placeholder.svg?height=60&width=180&text=IBM" },
     { name: "Meta", logo: "/placeholder.svg?height=60&width=180&text=Meta" },
-    { name: "Oracle", logo: "/placeholder.svg?height=60&width=180&text=Oracle" },
-  ]
+    {
+      name: "Oracle",
+      logo: "/placeholder.svg?height=60&width=180&text=Oracle",
+    },
+  ];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -321,7 +324,10 @@ export function LandingPage() {
               variants={containerVariants}
               className="grid gap-8 lg:grid-cols-2 lg:gap-16"
             >
-              <motion.div variants={itemVariants} className="flex flex-col justify-center space-y-6">
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col justify-center space-y-6"
+              >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -365,8 +371,9 @@ export function LandingPage() {
                     },
                   }}
                 >
-                  Join millions of learners worldwide and discover courses taught by industry experts. Advance your
-                  career, learn a new skill, or pursue your passions.
+                  Join millions of learners worldwide and discover courses
+                  taught by industry experts. Advance your career, learn a new
+                  skill, or pursue your passions.
                 </motion.p>
                 <motion.div
                   className="flex flex-col gap-4 sm:flex-row"
@@ -430,7 +437,10 @@ export function LandingPage() {
                   </div>
                 </motion.div>
               </motion.div>
-              <motion.div variants={itemVariants} className="relative flex items-center justify-center">
+              <motion.div
+                variants={itemVariants}
+                className="relative flex items-center justify-center"
+              >
                 <motion.div
                   className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/20 to-purple-500/20 blur-xl"
                   animate={{
@@ -447,7 +457,7 @@ export function LandingPage() {
                   <div className="relative h-full w-full rounded-xl overflow-hidden">
                     <Image
                       src="/landing.png"
-                      alt="Learn with NexLearn"
+                      alt="Learn with IdataTech"
                       width={800}
                       height={400}
                       className="h-full w-full object-cover"
@@ -514,7 +524,9 @@ export function LandingPage() {
                   repeatType: "loop",
                 }}
               >
-                <p className="mb-2 text-sm text-muted-foreground">Scroll to explore</p>
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Scroll to explore
+                </p>
                 <ChevronDown className="h-6 w-6 text-muted-foreground" />
               </motion.div>
             </motion.div>
@@ -538,7 +550,9 @@ export function LandingPage() {
                   variants={statsVariants}
                   className="flex flex-col items-center justify-center rounded-lg bg-background p-6 text-center shadow-sm"
                 >
-                  <div className="mb-3 rounded-full bg-primary/10 p-3">{stat.icon}</div>
+                  <div className="mb-3 rounded-full bg-primary/10 p-3">
+                    {stat.icon}
+                  </div>
                   <motion.h3
                     className="text-3xl font-bold md:text-4xl"
                     initial={{ opacity: 0, scale: 0.5 }}
@@ -571,10 +585,14 @@ export function LandingPage() {
             <motion.div
               className="text-center"
               initial={{ opacity: 0, y: 20 }}
-              animate={partnersInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={
+                partnersInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+              }
               transition={{ duration: 0.6 }}
             >
-              <h2 className="mb-8 text-xl font-medium text-muted-foreground">Trusted by leading companies worldwide</h2>
+              <h2 className="mb-8 text-xl font-medium text-muted-foreground">
+                Trusted by leading companies worldwide
+              </h2>
               <motion.div
                 className="flex flex-wrap items-center justify-center gap-8 grayscale opacity-70"
                 variants={staggerContainerVariants}
@@ -612,7 +630,9 @@ export function LandingPage() {
           <div className="container px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={howItWorksInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={
+                howItWorksInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+              }
               transition={{ duration: 0.6 }}
               className="mx-auto max-w-3xl text-center"
             >
@@ -620,9 +640,12 @@ export function LandingPage() {
                 <Sparkles className="mr-1 h-3.5 w-3.5" />
                 <span>Simple Process</span>
               </div>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">How NexLearn Works</h2>
+              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                How IdataTech Works
+              </h2>
               <p className="mt-4 text-xl text-muted-foreground">
-                Our platform makes learning new skills simple and accessible for everyone.
+                Our platform makes learning new skills simple and accessible for
+                everyone.
               </p>
             </motion.div>
 
@@ -633,7 +656,11 @@ export function LandingPage() {
               animate={howItWorksInView ? "visible" : "hidden"}
             >
               {howItWorks.map((step, index) => (
-                <motion.div key={index} variants={fadeInUpVariants} className="relative">
+                <motion.div
+                  key={index}
+                  variants={fadeInUpVariants}
+                  className="relative"
+                >
                   <div className="flex flex-col items-center text-center">
                     <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
                       {step.icon}
@@ -663,20 +690,22 @@ export function LandingPage() {
           <div className="container px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={
+                featuresInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+              }
               transition={{ duration: 0.6 }}
               className="mx-auto max-w-3xl text-center"
             >
               <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm text-primary">
                 <Sparkles className="mr-1 h-3.5 w-3.5" />
-                <span>Why Choose NexLearn</span>
+                <span>Why Choose IdataTech</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                 Revolutionizing Online Education
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
-                Our platform combines cutting-edge technology with expert instruction to deliver an unparalleled
-                learning experience.
+                Our platform combines cutting-edge technology with expert
+                instruction to deliver an unparalleled learning experience.
               </p>
             </motion.div>
 
@@ -701,7 +730,9 @@ export function LandingPage() {
                   <div className="relative z-10">
                     {feature.icon}
                     <h3 className="mt-4 text-xl font-bold">{feature.title}</h3>
-                    <p className="mt-2 text-muted-foreground">{feature.description}</p>
+                    <p className="mt-2 text-muted-foreground">
+                      {feature.description}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -714,7 +745,10 @@ export function LandingPage() {
               variants={containerVariants}
               className="mt-24 grid gap-12 lg:grid-cols-2"
             >
-              <motion.div variants={itemVariants} className="flex flex-col justify-center space-y-6">
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col justify-center space-y-6"
+              >
                 <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm text-primary">
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   <span>Immersive Learning</span>
@@ -723,8 +757,9 @@ export function LandingPage() {
                   Interactive Courses Designed for the Future
                 </h2>
                 <p className="text-xl text-muted-foreground">
-                  Our courses feature interactive elements, real-world projects, and cutting-edge content to prepare you
-                  for tomorrow's challenges.
+                  Our courses feature interactive elements, real-world projects,
+                  and cutting-edge content to prepare you for tomorrow's
+                  challenges.
                 </p>
                 <ul className="space-y-3">
                   {[
@@ -743,11 +778,15 @@ export function LandingPage() {
                 </ul>
                 <Button size="lg" className="w-fit" asChild>
                   <Link href="/courses">
-                    Explore Our Methodology <ChevronRight className="ml-1 h-4 w-4" />
+                    Explore Our Methodology{" "}
+                    <ChevronRight className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
               </motion.div>
-              <motion.div variants={itemVariants} className="relative flex items-center justify-center">
+              <motion.div
+                variants={itemVariants}
+                className="relative flex items-center justify-center"
+              >
                 <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/20 to-purple-500/20 blur-xl"></div>
                 <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-background/50 p-1 backdrop-blur">
                   <Image
@@ -799,7 +838,8 @@ export function LandingPage() {
                 Learning Solutions for All
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
-                Whether you're a student, instructor, or business, NexLearn has the perfect solution for you.
+                Whether you're a student, instructor, or business, IdataTech has
+                the perfect solution for you.
               </p>
             </motion.div>
 
@@ -811,7 +851,9 @@ export function LandingPage() {
                     onClick={() => setActiveTab(index)}
                     className={cn(
                       "rounded-full px-6 py-2 text-sm font-medium transition-all",
-                      activeTab === index ? "bg-primary text-white shadow-md" : "bg-muted hover:bg-muted/80",
+                      activeTab === index
+                        ? "bg-primary text-white shadow-md"
+                        : "bg-muted hover:bg-muted/80"
                     )}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -831,8 +873,12 @@ export function LandingPage() {
                   className="mt-12 grid gap-8 lg:grid-cols-2"
                 >
                   <div className="flex flex-col justify-center space-y-6">
-                    <h3 className="text-2xl font-bold">{tabContent[activeTab].title}</h3>
-                    <p className="text-lg text-muted-foreground">{tabContent[activeTab].content}</p>
+                    <h3 className="text-2xl font-bold">
+                      {tabContent[activeTab].title}
+                    </h3>
+                    <p className="text-lg text-muted-foreground">
+                      {tabContent[activeTab].content}
+                    </p>
                     <ul className="space-y-3">
                       {tabContent[activeTab].features.map((feature, i) => (
                         <li key={i} className="flex items-start">
@@ -880,9 +926,12 @@ export function LandingPage() {
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   <span>Featured Courses</span>
                 </div>
-                <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Most Popular Courses</h2>
+                <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                  Most Popular Courses
+                </h2>
                 <p className="mt-4 text-xl text-muted-foreground">
-                  Discover our highest-rated and most enrolled courses across various disciplines.
+                  Discover our highest-rated and most enrolled courses across
+                  various disciplines.
                 </p>
               </motion.div>
             </motion.div>
@@ -894,7 +943,7 @@ export function LandingPage() {
               variants={containerVariants}
               className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4"
             >
-              {popularCourses.map((course, index) => (
+              {courses.length > 0 && courses.map((course, index) => (
                 <motion.div
                   key={course.id}
                   variants={itemVariants}
@@ -914,21 +963,29 @@ export function LandingPage() {
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                         <div className="absolute right-3 top-3 rounded-full bg-background/80 px-3 py-1 text-sm font-medium backdrop-blur-sm">
-                          {course.category}
+                          {course.level}
                         </div>
                       </div>
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
-                          <p className="text-sm text-muted-foreground">By {course.instructor}</p>
+                          <p className="text-sm text-muted-foreground">
+                             {course.duration}
+                          </p>
                           <div className="flex items-center">
                             <Star className="mr-1 h-4 w-4 fill-primary text-primary" />
-                            <span className="text-sm font-medium">{course.rating}</span>
+                            <span className="text-sm font-medium">
+                              4.8
+                            </span>
                           </div>
                         </div>
-                        <h3 className="mt-2 text-xl font-bold">{course.title}</h3>
+                        <h3 className="mt-2 text-xl font-bold">
+                          {course.title}
+                        </h3>
                         <div className="mt-4 flex items-center justify-between">
                           <p className="text-lg font-bold">${course.price}</p>
-                          <p className="text-sm text-muted-foreground">{course.students.toLocaleString()} students</p>
+                          <p className="text-sm text-muted-foreground">
+                            100+ students
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
@@ -966,7 +1023,8 @@ export function LandingPage() {
                   What Our Students Say
                 </h2>
                 <p className="mt-4 text-xl text-muted-foreground">
-                  Hear from our community of learners who have transformed their careers through our platform.
+                  Hear from our community of learners who have transformed their
+                  careers through our platform.
                 </p>
               </motion.div>
             </motion.div>
@@ -995,8 +1053,8 @@ export function LandingPage() {
                   Start Your Learning Journey Today
                 </h2>
                 <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-                  Get 20% off on all courses for a limited time. Invest in your future and join thousands of successful
-                  students.
+                  Get 20% off on all courses for a limited time. Invest in your
+                  future and join thousands of successful students.
                 </p>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row">
                   <Button
@@ -1035,9 +1093,12 @@ export function LandingPage() {
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   <span>Latest Articles</span>
                 </div>
-                <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">From Our Blog</h2>
+                <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                  From Our Blog
+                </h2>
                 <p className="mt-4 text-xl text-muted-foreground">
-                  Stay updated with the latest trends, insights, and educational resources.
+                  Stay updated with the latest trends, insights, and educational
+                  resources.
                 </p>
               </motion.div>
             </motion.div>
@@ -1057,25 +1118,30 @@ export function LandingPage() {
                   excerpt:
                     "Exploring how artificial intelligence is transforming the learning experience for students worldwide.",
                   date: "Apr 10, 2025",
-                  image: "/placeholder.svg?height=400&width=600&text=AI+in+Education",
+                  image:
+                    "/placeholder.svg?height=400&width=600&text=AI+in+Education",
                   category: "Technology",
                 },
                 {
                   id: 2,
                   slug: "mastering-data-science",
                   title: "5 Steps to Mastering Data Science",
-                  excerpt: "A comprehensive guide to building your skills in one of the most in-demand fields in tech.",
+                  excerpt:
+                    "A comprehensive guide to building your skills in one of the most in-demand fields in tech.",
                   date: "Apr 5, 2025",
-                  image: "/placeholder.svg?height=400&width=600&text=Data+Science",
+                  image:
+                    "/placeholder.svg?height=400&width=600&text=Data+Science",
                   category: "Data Science",
                 },
                 {
                   id: 3,
                   slug: "remote-learning-tips",
                   title: "Effective Remote Learning Strategies",
-                  excerpt: "Tips and techniques to maximize productivity and engagement when learning from home.",
+                  excerpt:
+                    "Tips and techniques to maximize productivity and engagement when learning from home.",
                   date: "Mar 28, 2025",
-                  image: "/placeholder.svg?height=400&width=600&text=Remote+Learning",
+                  image:
+                    "/placeholder.svg?height=400&width=600&text=Remote+Learning",
                   category: "Learning Tips",
                 },
               ].map((post) => (
@@ -1102,9 +1168,13 @@ export function LandingPage() {
                         </div>
                       </div>
                       <CardContent className="p-6">
-                        <p className="text-sm text-muted-foreground">{post.date}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {post.date}
+                        </p>
                         <h3 className="mt-2 text-xl font-bold">{post.title}</h3>
-                        <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+                        <p className="mt-2 text-muted-foreground">
+                          {post.excerpt}
+                        </p>
                         <div className="mt-4 flex items-center text-sm font-medium text-primary">
                           Read More <ArrowRight className="ml-1 h-4 w-4" />
                         </div>
@@ -1135,9 +1205,12 @@ export function LandingPage() {
               transition={{ duration: 0.6 }}
               className="mx-auto max-w-3xl text-center"
             >
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Join Our Learning Community</h2>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                Join Our Learning Community
+              </h2>
               <p className="mt-4 text-xl text-primary-foreground/90">
-                Subscribe to our newsletter for the latest courses, articles, and educational resources.
+                Subscribe to our newsletter for the latest courses, articles,
+                and educational resources.
               </p>
               <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                 <input
@@ -1158,7 +1231,7 @@ export function LandingPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
 function Search(props: any) {
@@ -1178,5 +1251,5 @@ function Search(props: any) {
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
     </svg>
-  )
+  );
 }
