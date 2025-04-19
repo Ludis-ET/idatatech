@@ -49,7 +49,7 @@ export function LandingPage() {
     excerpt: string;
     category?: string;
   }
-  
+
   const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -322,7 +322,7 @@ export function LandingPage() {
         "Course completion certificates",
         "24/7 access to course materials",
       ],
-      image: "/placeholder.svg?height=400&width=600&text=Student+Learning",
+      image: "/2.png",
     },
     {
       title: "For Instructors",
@@ -335,7 +335,7 @@ export function LandingPage() {
         "Marketing support for your courses",
         "Community of fellow educators",
       ],
-      image: "/placeholder.svg?height=400&width=600&text=Instructor+Teaching",
+      image: "/3.png",
     },
     {
       title: "For Businesses",
@@ -348,7 +348,7 @@ export function LandingPage() {
         "API integration with your systems",
         "Dedicated customer success manager",
       ],
-      image: "/placeholder.svg?height=400&width=600&text=Business+Training",
+      image: "/4.png",
     },
   ];
 
@@ -522,37 +522,14 @@ export function LandingPage() {
                 <div className="relative aspect-video w-full max-w-[600px] overflow-hidden rounded-2xl border border-border/40 bg-background/50 p-1 backdrop-blur">
                   <div className="relative h-full w-full rounded-xl overflow-hidden">
                     <Image
-                      src="/placeholder.svg?height=400&width=600&text=Learn+with+NexLearn"
-                      alt="Learn with NexLearn"
+                      src="landing.png"
+                      alt="Learn with IdataTech"
                       width={600}
                       height={400}
                       className="h-full w-full object-cover"
                       priority
                     />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <motion.button
-                        onClick={playVideo}
-                        className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-white shadow-lg transition-transform hover:scale-110"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Play className="h-6 w-6 fill-current" />
-                      </motion.button>
-                    </div>
                   </div>
-                  <video
-                    ref={videoRef}
-                    className="absolute inset-0 h-full w-full rounded-xl object-cover"
-                    style={{ display: videoPlaying ? "block" : "none" }}
-                    controls={videoPlaying}
-                    onEnded={() => setVideoPlaying(false)}
-                  >
-                    <source
-                      src="https://example.com/placeholder-video.mp4"
-                      type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                  </video>
                 </div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -730,7 +707,7 @@ export function LandingPage() {
                 <span>Simple Process</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                How NexLearn Works
+                How IdataTech Works
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
                 Our platform makes learning new skills simple and accessible for
@@ -787,7 +764,7 @@ export function LandingPage() {
             >
               <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm text-primary">
                 <Sparkles className="mr-1 h-3.5 w-3.5" />
-                <span>Why Choose NexLearn</span>
+                <span>Why Choose IdataTech</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                 Revolutionizing Online Education
@@ -879,30 +856,12 @@ export function LandingPage() {
                 <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/20 to-purple-500/20 blur-xl"></div>
                 <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-border/40 bg-background/50 p-1 backdrop-blur">
                   <Image
-                    src="/placeholder.svg?height=400&width=600&text=Interactive+Learning"
+                    src="/1.png"
                     alt="Interactive Learning"
                     width={600}
                     height={400}
                     className="h-full w-full rounded-xl object-cover"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="rounded-full bg-background/80 p-4 backdrop-blur-sm">
-                      <div className="h-16 w-16 rounded-full bg-primary p-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-full w-full text-primary-foreground"
-                        >
-                          <polygon points="5 3 19 12 5 21 5 3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -927,7 +886,7 @@ export function LandingPage() {
                 Learning Solutions for All
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
-                Whether you're a student, instructor, or business, NexLearn has
+                Whether you're a student, instructor, or business, IdataTech has
                 the perfect solution for you.
               </p>
             </motion.div>

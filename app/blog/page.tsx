@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Blog | NexLearn",
+  title: "Blog | IdataTech",
   description: "Latest articles, tutorials, and resources",
 };
 

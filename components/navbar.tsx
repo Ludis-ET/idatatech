@@ -83,7 +83,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary">
               <div className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">
-                N
+                I
               </div>
             </div>
             <span className="text-xl font-bold">IdataTech</span>
