@@ -32,11 +32,27 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { TestimonialCarousel } from "@/components/testimonial-carousel";
 import { cn } from "@/lib/utils";
+import { createClientSupabaseClient } from "@/lib/supabase/client";
+import { formatDate } from "@/lib/utils";
 
-export function LandingPage({courses}) {
+export function LandingPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
+  interface BlogPost {
+    id: string;
+    title: string;
+    slug: string;
+    image_url?: string;
+    created_at: string;
+    excerpt: string;
+    category?: string;
+  }
+  
+  const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const statsInView = useInView(statsRef, { once: true, amount: 0.3 });
@@ -70,6 +86,58 @@ export function LandingPage({courses}) {
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Fetch featured courses and blogs
+    const fetchFeaturedContent = async () => {
+      setIsLoading(true);
+      const supabase = createClientSupabaseClient();
+
+      // Fetch featured courses
+      const { data: coursesData, error: coursesError } = await supabase
+        .from("courses")
+        .select(
+          `
+          *,
+          categories(name, slug)
+        `
+        )
+        .eq("published", true)
+        .eq("featured", true)
+        .order("created_at", { ascending: false })
+        .limit(4);
+
+      if (coursesError) {
+        console.error("Error fetching featured courses:", coursesError);
+      } else {
+        setFeaturedCourses(coursesData || []);
+      }
+
+      // Fetch featured blogs
+      const { data: blogsData, error: blogsError } = await supabase
+        .from("blog_posts")
+        .select(
+          `
+          *,
+          blog_post_tags(
+            blog_tags(id, name, slug)
+          )
+        `
+        )
+        .eq("published", true)
+        .eq("featured", true)
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      if (blogsError) {
+        console.error("Error fetching featured blogs:", blogsError);
+      } else {
+        setFeaturedBlogs(blogsData || []);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchFeaturedContent();
   }, []);
 
   const playVideo = () => {
@@ -192,8 +260,6 @@ export function LandingPage({courses}) {
     },
   ];
 
-  
-  console.log(courses)
   const stats = [
     {
       value: "10M+",
@@ -357,7 +423,7 @@ export function LandingPage({courses}) {
                   </span>
                 </motion.h1>
                 <motion.p
-                  className="max-w-[800px] text-xl text-muted-foreground"
+                  className="max-w-[600px] text-xl text-muted-foreground"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: {
@@ -453,17 +519,40 @@ export function LandingPage({courses}) {
                     repeatType: "reverse",
                   }}
                 />
-                <div className="relative aspect-video w-full max-w-[10000px] overflow-hidden rounded-2xl border border-border/40 bg-background/50 p-1 backdrop-blur">
+                <div className="relative aspect-video w-full max-w-[600px] overflow-hidden rounded-2xl border border-border/40 bg-background/50 p-1 backdrop-blur">
                   <div className="relative h-full w-full rounded-xl overflow-hidden">
                     <Image
-                      src="/landing.png"
-                      alt="Learn with IdataTech"
-                      width={800}
+                      src="/placeholder.svg?height=400&width=600&text=Learn+with+NexLearn"
+                      alt="Learn with NexLearn"
+                      width={600}
                       height={400}
                       className="h-full w-full object-cover"
                       priority
                     />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <motion.button
+                        onClick={playVideo}
+                        className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/90 text-white shadow-lg transition-transform hover:scale-110"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Play className="h-6 w-6 fill-current" />
+                      </motion.button>
+                    </div>
                   </div>
+                  <video
+                    ref={videoRef}
+                    className="absolute inset-0 h-full w-full rounded-xl object-cover"
+                    style={{ display: videoPlaying ? "block" : "none" }}
+                    controls={videoPlaying}
+                    onEnded={() => setVideoPlaying(false)}
+                  >
+                    <source
+                      src="https://example.com/placeholder-video.mp4"
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -641,7 +730,7 @@ export function LandingPage({courses}) {
                 <span>Simple Process</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-                How IdataTech Works
+                How NexLearn Works
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
                 Our platform makes learning new skills simple and accessible for
@@ -698,7 +787,7 @@ export function LandingPage({courses}) {
             >
               <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm text-primary">
                 <Sparkles className="mr-1 h-3.5 w-3.5" />
-                <span>Why Choose IdataTech</span>
+                <span>Why Choose NexLearn</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                 Revolutionizing Online Education
@@ -838,7 +927,7 @@ export function LandingPage({courses}) {
                 Learning Solutions for All
               </h2>
               <p className="mt-4 text-xl text-muted-foreground">
-                Whether you're a student, instructor, or business, IdataTech has
+                Whether you're a student, instructor, or business, NexLearn has
                 the perfect solution for you.
               </p>
             </motion.div>
@@ -943,55 +1032,93 @@ export function LandingPage({courses}) {
               variants={containerVariants}
               className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-4"
             >
-              {courses.length > 0 && courses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  variants={itemVariants}
-                  whileHover={{
-                    y: -10,
-                    transition: { duration: 0.2 },
-                  }}
-                >
-                  <Link href={`/courses/${course.slug}`}>
-                    <Card className="group overflow-hidden transition-all hover:shadow-lg">
-                      <div className="relative aspect-video overflow-hidden">
-                        <Image
-                          src={course.image_url || "/placeholder.svg"}
-                          alt={course.title}
-                          width={600}
-                          height={400}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute right-3 top-3 rounded-full bg-background/80 px-3 py-1 text-sm font-medium backdrop-blur-sm">
-                          {course.level}
+              {isLoading ? (
+                // Loading skeleton
+                Array(4)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className="rounded-lg border bg-card p-0 shadow-sm"
+                    >
+                      <div className="aspect-video w-full animate-pulse bg-muted"></div>
+                      <div className="p-6 space-y-4">
+                        <div className="h-4 w-3/4 animate-pulse rounded bg-muted"></div>
+                        <div className="h-6 w-full animate-pulse rounded bg-muted"></div>
+                        <div className="flex items-center justify-between">
+                          <div className="h-5 w-1/4 animate-pulse rounded bg-muted"></div>
+                          <div className="h-5 w-1/4 animate-pulse rounded bg-muted"></div>
                         </div>
                       </div>
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm text-muted-foreground">
-                             {course.duration}
-                          </p>
-                          <div className="flex items-center">
-                            <Star className="mr-1 h-4 w-4 fill-primary text-primary" />
-                            <span className="text-sm font-medium">
-                              4.8
-                            </span>
+                    </div>
+                  ))
+              ) : featuredCourses.length > 0 ? (
+                featuredCourses.map((course, index) => (
+                  <motion.div
+                    key={course.id}
+                    variants={itemVariants}
+                    whileHover={{
+                      y: -10,
+                      transition: { duration: 0.2 },
+                    }}
+                  >
+                    <Link href={`/courses/${course.slug}`}>
+                      <Card className="group overflow-hidden transition-all hover:shadow-lg">
+                        <div className="relative aspect-video overflow-hidden">
+                          <Image
+                            src={
+                              course.image_url ||
+                              "/placeholder.svg?height=400&width=600&text=" +
+                                encodeURIComponent(course.title)
+                            }
+                            alt={course.title}
+                            width={600}
+                            height={400}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute right-3 top-3 rounded-full bg-background/80 px-3 py-1 text-sm font-medium backdrop-blur-sm">
+                            {course.categories?.name || "Course"}
                           </div>
                         </div>
-                        <h3 className="mt-2 text-xl font-bold">
-                          {course.title}
-                        </h3>
-                        <div className="mt-4 flex items-center justify-between">
-                          <p className="text-lg font-bold">${course.price}</p>
-                          <p className="text-sm text-muted-foreground">
-                            100+ students
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm text-muted-foreground">
+                              By {course.instructor_name || "Instructor"}
+                            </p>
+                            <div className="flex items-center">
+                              <Star className="mr-1 h-4 w-4 fill-primary text-primary" />
+                              <span className="text-sm font-medium">
+                                {course.rating || "4.5"}
+                              </span>
+                            </div>
+                          </div>
+                          <h3 className="mt-2 text-xl font-bold">
+                            {course.title}
+                          </h3>
+                          <div className="mt-4 flex items-center justify-between">
+                            <p className="text-lg font-bold">
+                              ${course.price || "99.99"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {course.students_count || "1000"}+ students
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-4 flex flex-col items-center justify-center py-12 text-center">
+                  <div className="mb-4 text-4xl">📚</div>
+                  <h3 className="mb-2 text-xl font-semibold">
+                    No courses found
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Check back soon for new courses
+                  </p>
+                </div>
+              )}
             </motion.div>
 
             <div className="mt-16 text-center">
@@ -1110,79 +1237,82 @@ export function LandingPage({courses}) {
               variants={containerVariants}
               className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3"
             >
-              {[
-                {
-                  id: 1,
-                  slug: "future-of-ai-education",
-                  title: "The Future of AI in Education",
-                  excerpt:
-                    "Exploring how artificial intelligence is transforming the learning experience for students worldwide.",
-                  date: "Apr 10, 2025",
-                  image:
-                    "/placeholder.svg?height=400&width=600&text=AI+in+Education",
-                  category: "Technology",
-                },
-                {
-                  id: 2,
-                  slug: "mastering-data-science",
-                  title: "5 Steps to Mastering Data Science",
-                  excerpt:
-                    "A comprehensive guide to building your skills in one of the most in-demand fields in tech.",
-                  date: "Apr 5, 2025",
-                  image:
-                    "/placeholder.svg?height=400&width=600&text=Data+Science",
-                  category: "Data Science",
-                },
-                {
-                  id: 3,
-                  slug: "remote-learning-tips",
-                  title: "Effective Remote Learning Strategies",
-                  excerpt:
-                    "Tips and techniques to maximize productivity and engagement when learning from home.",
-                  date: "Mar 28, 2025",
-                  image:
-                    "/placeholder.svg?height=400&width=600&text=Remote+Learning",
-                  category: "Learning Tips",
-                },
-              ].map((post) => (
-                <motion.div
-                  key={post.id}
-                  variants={itemVariants}
-                  whileHover={{
-                    y: -10,
-                    transition: { duration: 0.2 },
-                  }}
-                >
-                  <Link href={`/blog/${post.slug}`}>
-                    <Card className="group overflow-hidden transition-all hover:shadow-lg">
-                      <div className="relative aspect-video overflow-hidden">
-                        <Image
-                          src={post.image || "/placeholder.svg"}
-                          alt={post.title}
-                          width={600}
-                          height={400}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute right-3 top-3 rounded-full bg-background/80 px-3 py-1 text-sm font-medium backdrop-blur-sm">
-                          {post.category}
-                        </div>
+              {isLoading ? (
+                // Loading skeleton
+                Array(3)
+                  .fill(0)
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className="rounded-lg border bg-card p-0 shadow-sm"
+                    >
+                      <div className="aspect-video w-full animate-pulse bg-muted"></div>
+                      <div className="p-6 space-y-4">
+                        <div className="h-4 w-1/4 animate-pulse rounded bg-muted"></div>
+                        <div className="h-6 w-full animate-pulse rounded bg-muted"></div>
+                        <div className="h-20 w-full animate-pulse rounded bg-muted"></div>
+                        <div className="h-4 w-1/4 animate-pulse rounded bg-muted"></div>
                       </div>
-                      <CardContent className="p-6">
-                        <p className="text-sm text-muted-foreground">
-                          {post.date}
-                        </p>
-                        <h3 className="mt-2 text-xl font-bold">{post.title}</h3>
-                        <p className="mt-2 text-muted-foreground">
-                          {post.excerpt}
-                        </p>
-                        <div className="mt-4 flex items-center text-sm font-medium text-primary">
-                          Read More <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
+                  ))
+              ) : featuredBlogs.length > 0 ? (
+                featuredBlogs.map((post) => (
+                  <motion.div
+                    key={post.id}
+                    variants={itemVariants}
+                    whileHover={{
+                      y: -10,
+                      transition: { duration: 0.2 },
+                    }}
+                  >
+                    <Link href={`/blog/${post.slug}`}>
+                      <Card className="group overflow-hidden transition-all hover:shadow-lg">
+                        <div className="relative aspect-video overflow-hidden">
+                          <Image
+                            src={
+                              post.image_url ||
+                              `/placeholder.svg?height=400&width=600&text=${encodeURIComponent(
+                                post.title
+                              )}`
+                            }
+                            alt={post.title}
+                            width={600}
+                            height={400}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute right-3 top-3 rounded-full bg-background/80 px-3 py-1 text-sm font-medium backdrop-blur-sm">
+                            {post.category}
+                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
+                        <CardContent className="p-6">
+                          <p className="text-sm text-muted-foreground">
+                            {formatDate(post.created_at)}
+                          </p>
+                          <h3 className="mt-2 text-xl font-bold">
+                            {post.title}
+                          </h3>
+                          <p className="mt-2 text-muted-foreground">
+                            {post.excerpt}
+                          </p>
+                          <div className="mt-4 flex items-center text-sm font-medium text-primary">
+                            Read More <ArrowRight className="ml-1 h-4 w-4" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-3 flex flex-col items-center justify-center py-12 text-center">
+                  <div className="mb-4 text-4xl">📝</div>
+                  <h3 className="mb-2 text-xl font-semibold">
+                    No blog posts found
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Check back soon for new articles
+                  </p>
+                </div>
+              )}
             </motion.div>
 
             <div className="mt-16 text-center">

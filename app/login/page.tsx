@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AuthForm } from "@/components/auth/auth-form";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Login | IdataTech",

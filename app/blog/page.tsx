@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Blog | IdataTech",
+  title: "Blog | NexLearn",
   description: "Latest articles, tutorials, and resources",
 };
 
@@ -57,9 +57,10 @@ export default async function BlogPage({
                         <Image
                           src={
                             post.image_url ||
-                            `/placeholder.svg?height=300&width=300&text=${encodeURIComponent(
-                              post.title
-                            )}`
+                            `/placeholder.svg?height=300&width=300&text=${
+                              encodeURIComponent(post.title) ||
+                              "/placeholder.svg"
+                            }`
                           }
                           alt={post.title}
                           fill

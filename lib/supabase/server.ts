@@ -3,8 +3,10 @@ import { cookies } from "next/headers"
 import type { Database } from "@/lib/supabase/database.types"
 
 export function createServerSupabaseClient() {
-  return createServerComponentClient<Database>({ cookies })
+  const cookieStore = () => cookies();
+  return createServerComponentClient<Database>({ cookies: cookieStore });
 }
+
 
 export function createServerActionSupabaseClient() {
   return createServerActionClient<Database>({ cookies })
